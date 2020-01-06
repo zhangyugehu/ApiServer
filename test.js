@@ -22,7 +22,7 @@ function insert() {
 function clear() {
 
     fetch('http://localhost:8000/notes/clear', {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
             // 'Content-Type': 'application/x-www-form-urlencoded'
             'Content-Type': 'application/json'
