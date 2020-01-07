@@ -32,6 +32,19 @@ module.exports = function(app, db) {
       }
       res.send(list)
     })
+    app.get('/notes/simple', async (req, res) => {
+      const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
+      const cursor = db.collection('notes').find().sort({ timestamp: -1 }).limit(limit)
+      // const list = [];
+      let html = ''
+      while(await cursor.hasNext()) {
+        const item = await cursor.next();
+        if (!item) continue
+        html += '<p>[' + item.desp + ']' + item.text + '</p>'
+      }
+      res.send(html)
+      // res.send(list)
+    })
 
     app.delete('/notes', async (req, res) => {
       // const cursor = db.collection('notes').find()
