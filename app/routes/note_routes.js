@@ -36,12 +36,23 @@ module.exports = function(app, db) {
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection('notes').find().sort({ timestamp: -1 }).limit(limit)
       // const list = [];
-      let html = ''
+      let html = '<!DOCTYPE html>'
+      html += '<html xmlns="http://www.w3.org/1999/xhtml">'
+      html += '<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"></head>'
+      html += '<div>'
+      let counter = 0;
       while(await cursor.hasNext()) {
         const item = await cursor.next();
         if (!item) continue
-        html += '<p>[' + item.desp + ']' + item.text + '</p>'
+        if (counter === 0) {
+          html += '<h1>[' + item.desp + ']' + item.text + '</h1>'
+        } else {
+          html += '<p>[' + item.desp + ']' + item.text + '</p>'
+        }
+        counter ++;
       }
+      html += '</div>'
+      html += '</html>'
       res.send(html)
       // res.send(list)
     })
