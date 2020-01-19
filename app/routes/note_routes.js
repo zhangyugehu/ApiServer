@@ -8,11 +8,11 @@ const LIMIT_DEFAULT = 10;
 
 module.exports = function(app, db) {
     app.post('/notes', async (req, res) => {
-      const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
-      if (!success) {
-        res.send(Tips[Code.TOKEN_ERR])
-        return
-      }
+      // const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
+      // if (!success) {
+      //   res.send(Tips[Code.TOKEN_ERR])
+      //   return
+      // }
       req.body.timestamp = new Date().getTime();
       console.log('body====>', req.body)
       db.collection(DBTables.NOTE)
