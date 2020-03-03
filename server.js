@@ -4,24 +4,14 @@ const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 const db             = require('./config/db');
 const app            = express();
+const https          = require('https');
+const fs             = require('fs');
+const path             = require('path');
 
-const port = 8000;
+const PORT_HTTP = 8000;
+const PORT_HTTPS = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// const uri = "mongodb+srv://u-notification:<password>@cluster0-ntqve.azure.mongodb.net/test?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true });
-// client.connect(err => {
-//   if (err) {
-//     console.log(err);
-//     return;
-//   }
-//   const database = client.db("test")
-//   require('./app/routes')(app, database);
-//   app.listen(port, () => {
-//     console.log('We are live on ' + port);
-//   });
-// });
 
 MongoClient.connect(db.url, function(err, client) {
   if (err) {
@@ -30,7 +20,15 @@ MongoClient.connect(db.url, function(err, client) {
   }
   const database = client.db("test")
   require('./app/routes')(app, database);
-  app.listen(port, () => {
-    console.log('We are live on ' + port);
-  });          
+  app.listen(PORT_HTTP, () => {
+    console.log('http listen on ' + PORT_HTTP);
+  });      
+  
+  const key = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.key'), 'utf-8');
+  const cert = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.pem'), 'utf-8');
+  const certs = {key, cert};
+  const httpsServer = https.createServer(certs, app);
+  httpsServer.listen(PORT_HTTPS, function() {
+    console.log('https listen on ' + PORT_HTTPS);
+  });
 });
