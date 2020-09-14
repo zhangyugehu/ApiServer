@@ -4,7 +4,8 @@ const DBTables = {
     NOTE: 'notes',
     ACCOUNTING: 't_accounting',
     TOKEN: 't_token',
-    USER: 't_user'
+    USER: 't_user',
+    CLIPBOARD: 't_clipboard'
 }
 
 module.exports = {

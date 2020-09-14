@@ -38,6 +38,11 @@ module.exports = function(app, db) {
     })
 
     app.get('/notes/simple', async (req, res) => {
+      // const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
+      // if (!success) {
+      //   res.send(Tips[Code.TOKEN_ERR])
+      //   return
+      // }
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection(DBTables.NOTE).find().sort({ timestamp: -1 }).limit(limit)
       // const list = [];
@@ -49,8 +54,8 @@ module.exports = function(app, db) {
       while(await cursor.hasNext()) {
         const item = await cursor.next();
         if (!item) continue
-        if (counter === 0) {
-          html += '<h1>[' + item.desp + ']' + item.text + '</h1>'
+        if (counter < 6) {
+          html += `<h${counter+1}>` + item.desp + ']' + item.text + `</h${counter+1}>`
         } else {
           html += '<p>[' + item.desp + ']' + item.text + '</p>'
         }
@@ -70,12 +75,5 @@ module.exports = function(app, db) {
       }
       db.collection(DBTables.NOTE).remove({})
       res.send(Tips[Code.SUCCESS])
-      // if (req.body.pwd === 'hth123456') {
-      //   db.collection(DBTables.NOTE).remove({})
-      //   res.send(JSON.stringify({message: 'success'}))
-      // } else {
-      //   console.log(req.body)
-      //   res.send(JSON.stringify({message: 'pwd error.'}))
-      // }
     })
 };

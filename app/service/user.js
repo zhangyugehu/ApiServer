@@ -93,5 +93,5 @@ async function logout(token, db) {
   return Tips[Code.SUCCESS]
 }
 module.exports = {
-  register, login, tokenLogin, logout
+  register, login, tokenLogin, logout, findUserByToken
 }
