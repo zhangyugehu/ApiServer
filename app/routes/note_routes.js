@@ -2,7 +2,8 @@
 
 const { DBTables } = require('../../config/db')
 const TokenHelper = require('../util/token')
-const { Tips, Code } = require('../model/response')
+const { Tips, Code } = require('../model/response');
+const Html = require('../util/html')
 
 const LIMIT_DEFAULT = 10;
 
@@ -45,26 +46,22 @@ module.exports = function(app, db) {
       // }
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection(DBTables.NOTE).find().sort({ timestamp: -1 }).limit(limit)
-      // const list = [];
-      let html = '<!DOCTYPE html>'
-      html += '<html xmlns="http://www.w3.org/1999/xhtml">'
-      html += '<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"></head>'
-      html += '<div>'
-      let counter = 0;
+      const list = [];
       while(await cursor.hasNext()) {
         const item = await cursor.next();
         if (!item) continue
-        if (counter < 6) {
-          html += `<h${counter+1}>` + item.desp + ']' + item.text + `</h${counter+1}>`
-        } else {
-          html += '<p>[' + item.desp + ']' + item.text + '</p>'
-        }
-        counter ++;
+        list.push(item)
       }
-      html += '</div>'
-      html += '</html>'
-      res.send(html)
-      // res.send(list)
+      res.send(
+        Html.html(
+          Html.head("SMS"),
+          Html.ele('body',
+          Html.ele('div',
+              list.map(Html.beatify).join('\r\n')
+            )
+          )
+        )
+      )
     })
 
     app.delete('/notes', async (req, res) => {
