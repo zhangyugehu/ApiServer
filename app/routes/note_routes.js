@@ -3,7 +3,8 @@
 const { DBTables } = require('../../config/db')
 const TokenHelper = require('../util/token')
 const { Tips, Code } = require('../model/response');
-const Html = require('../util/html')
+const Html = require('../util/html');
+const { safeEncode, safeDecode } = require('../util/crypto');
 
 const LIMIT_DEFAULT = 10;
 
@@ -72,5 +73,30 @@ module.exports = function(app, db) {
       }
       db.collection(DBTables.NOTE).remove({})
       res.send(Tips[Code.SUCCESS])
+    })
+
+    app.get('/enpwd', async (req, res) => {
+      try {
+        const {content} = req.query
+        if (content) {
+          res.send(Tips.success(safeEncode(content && content.replace(/ /g, "+"))))
+        } else {
+          res.send(Tips[Code.PARAM_ERR])
+        }
+      } catch(e) {
+        res.send(Tips.fail(e.message))
+      }
+    })
+    app.get('/depwd', async (req, res) => {
+      try {
+        const {content} = req.query
+        if (content) {
+          res.send(Tips.success(safeDecode(content.replace(/ /g, "+"))))
+        } else {
+          res.send(Tips[Code.PARAM_ERR])
+        }
+      } catch(e) {
+        res.send(Tips.fail(e.message))
+      }
     })
 };

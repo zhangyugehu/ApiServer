@@ -1,4 +1,4 @@
-function createResponse(data, other) {
+function createResponse(data, other={}) {
   return { data, ...other }
 }
 
@@ -8,6 +8,7 @@ function createMessage(message, code) {
 
 const Code = {
   SUCCESS: 0,
+  ERR_COMMON: -1,
   ERR_UNKNOW: 1000,
   REGISTER_ERR: 1001,
   REGISTER_EXISTS: 1003,
@@ -18,6 +19,8 @@ const Code = {
   PARAM_ERR: 1007
 }
 const Tips = {
+  success: (data) => createResponse(data, {code: Code.SUCCESS}),
+  fail: (reason) => createMessage(reason, {code: Code.ERR_COMMON}),
   [Code.SUCCESS]: createMessage('success', Code.SUCCESS),
   [Code.ERR_UNKNOW]: createMessage('unknow error', Code.ERR_UNKNOW),
   [Code.REGISTER_ERR]: createMessage('register error', Code.REGISTER_ERR),
