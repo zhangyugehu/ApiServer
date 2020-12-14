@@ -16,6 +16,8 @@ const Code = {
   TOKEN_ERR: 1006,
 }
 const Tips = {
+  success: (data) => createResponse(data, {code: Code.SUCCESS}),
+  fail: (reason) => createMessage(reason, Code.ERR_COMMON),
   [Code.SUCCESS]: createMessage('success', Code.SUCCESS),
   [Code.REGISTER_ERR]: createMessage('register error', Code.REGISTER_ERR),
   [Code.REGISTER_EXISTS]: createMessage('user already exist', Code.REGISTER_EXISTS),
