@@ -6,7 +6,7 @@ function extensions() {
       "h+" : this.getUTCHours(),                   //小时 
       "m+" : this.getUTCMinutes(),                 //分 
       "s+" : this.getUTCSeconds(),                 //秒 
-      "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+      "q+" : Math.floor((this.getUTCMonth()+3)/3), //季度 
       "S"  : this.getMilliseconds()             //毫秒 
     }; 
     if(/(y+)/.test(fmt)) {

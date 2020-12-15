@@ -138,7 +138,7 @@ async function getDailyRecords(db, uid, month, showDel) {
     delete it.timestamp;
     delete it.uid;
     const d = new Date(it.date)
-    const idx = d.getDate() - 1
+    const idx = d.getUTCDate() - 1
     if (d instanceof Date && idx < daysRecords.length) {
       const {money = '0', category} = it
       const mny = parseFloat(money)
