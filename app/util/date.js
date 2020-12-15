@@ -29,7 +29,7 @@ function getDaysOfMonth(moy) {
     if (year % 200 === 0 || year % 4 === 0) {
       DAY_OF_MONTH[1] = 29
     }
-    return new Array(DAY_OF_MONTH[month]).fill('').map((_, day) => new Date(year, month, day + 1))
+    return new Array(DAY_OF_MONTH[month]).fill('').map((_, day) => new Date(year, month, day + 1, 12))
   }
   return []
 }
