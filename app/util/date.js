@@ -24,8 +24,8 @@ function extensions() {
 const DAY_OF_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 function getDaysOfMonth(moy) {
   if (moy instanceof Date) {
-    const year = moy.getFullYear()
-    const month = moy.getMonth()
+    const year = moy.getUTCFullYear()
+    const month = moy.getUTCMonth()
     if (year % 200 === 0 || year % 4 === 0) {
       DAY_OF_MONTH[1] = 29
     }
