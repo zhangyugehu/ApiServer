@@ -122,7 +122,7 @@ async function deleteById(db, uid, id) {
 }
 
 async function getDailyRecords(db, uid, month, showDel) {
-  const moy = new Date(month)
+  const moy = Date.parseUTC(month)
   if (!moy) {
     return null;
   }
@@ -137,7 +137,7 @@ async function getDailyRecords(db, uid, month, showDel) {
     delete it._id;
     delete it.timestamp;
     delete it.uid;
-    const d = new Date(it.date)
+    const d = Date.parseUTC(it.date)
     const idx = d.getUTCDate() - 1
     if (d instanceof Date && idx < daysRecords.length) {
       const {money = '0', category} = it

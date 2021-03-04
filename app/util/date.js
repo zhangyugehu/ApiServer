@@ -1,4 +1,9 @@
+const { Timestamp } = require("mongodb");
+
 function extensions() {
+  Date.parseUTC = function(timestamp) {
+    return new Date(timestamp + new Date().getTimezoneOffset())
+  }
   Date.prototype.format = function(fmt) { 
     const o = { 
       "M+" : this.getUTCMonth()+1,                 //月份 

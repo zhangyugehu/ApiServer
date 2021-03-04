@@ -49,10 +49,10 @@ module.exports = function(app, db) {
       while(await cursor.hasNext()) {
         const item = await cursor.next();
         if (!item) continue
-        if (counter === 0) {
-          html += '<h1>[' + item.desp + ']' + item.text + '</h1>'
+        if (counter < 5) {
+          html += '<div style="color: grey">' + item.desp + '<div><h1 style="color: black">' + item.text + '</h1>'
         } else {
-          html += '<p>[' + item.desp + ']' + item.text + '</p>'
+          html += '<div style="color: grey">' + item.desp + '<div><p style="color: black">' + item.text + '</p>'
         }
         counter ++;
       }

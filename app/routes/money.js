@@ -10,7 +10,7 @@ module.exports = function(app, db) {
   app.post(API_PATH, async (req, res) => {
     try {
       const { headers: { token }, body: { date, money, type, desc, category, ext } } = req
-      const dateD = new Date(parseInt(date))
+      const dateD = Date.parseUTC(parseInt(date))
       if (!dateD) {
         res.send(Tips.fail(e.message))
         return
