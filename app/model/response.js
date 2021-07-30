@@ -14,6 +14,8 @@ const Code = {
   LOGIN_EMPTY: 1004,
   LOGOUT_ERR: 1005,
   TOKEN_ERR: 1006,
+  USER_INVALIDATE: 1007,
+  PARAMS_ERR: 1008,
 }
 const Tips = {
   success: (data) => createResponse(data, {code: Code.SUCCESS}),
@@ -25,8 +27,9 @@ const Tips = {
   [Code.LOGIN_EMPTY]: createMessage('user unavailable', Code.LOGIN_EMPTY),
   [Code.LOGOUT_ERR]: createMessage('user logout err', Code.LOGOUT_ERR),
   [Code.TOKEN_ERR]: createMessage('token err', Code.TOKEN_ERR),
+  [Code.USER_INVALIDATE]: createMessage('login first!!!', Code.USER_INVALIDATE),
 }
 
 module.exports = {
-  createResponse, Tips, Code
+  createResponse, Tips, Code, createMessage
 }

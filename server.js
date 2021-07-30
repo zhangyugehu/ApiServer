@@ -22,7 +22,7 @@ MongoClient.connect(db.url, function(err, client) {
     return;
   }
   const database = client.db("test")
-  require('./app/routes')(app, database);
+  require('./app/routes')(app, database, client);
   app.listen(PORT_HTTP, () => {
     console.log('http listen on ' + PORT_HTTP);
   });      

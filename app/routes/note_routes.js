@@ -7,6 +7,7 @@ const { Tips, Code } = require('../model/response')
 const LIMIT_DEFAULT = 10;
 
 module.exports = function(app, db) {
+  
     app.post('/notes', async (req, res) => {
       // const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
       // if (!success) {
@@ -38,6 +39,11 @@ module.exports = function(app, db) {
     })
 
     app.get('/notes/simple', async (req, res) => {
+      const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
+      if (!success) {
+        res.send(Tips[Code.TOKEN_ERR])
+        return
+      }
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection(DBTables.NOTE).find().sort({ timestamp: -1 }).limit(limit)
       // const list = [];

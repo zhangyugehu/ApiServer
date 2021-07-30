@@ -43,13 +43,18 @@ async function register({ username, passwd }, db) {
   } catch(e) {
     return Tips[Code.REGISTER_EXISTS]
   }
-  const insertRst = await addUser(db, { username, passwd })
-  console.log('>>>insert result: ' + insertRst)
-
   const token = createToken(username)
-  const result = await getTokenTable(db).insert(createTokenDBModel(token, username))
-  console.log('>>>register add token: ' + result)
-  return Tips[token?Code.SUCCESS:Code.REGISTER_ERR]
+
+  if (token) {
+    const insertRst = await addUser(db, { username, passwd })
+    console.log('>>> insert user: ' + !!insertRst)
+
+    const result = await getTokenTable(db).insert(createTokenDBModel(token, username))
+    console.log(`>>> insert token: ${!!result}`)
+    return Tips[Code.SUCCESS]
+  } else {
+    return Tips[Code.REGISTER_ERR]
+  }
 }
 
 async function login({ username, passwd }, db) {
@@ -68,7 +73,7 @@ async function login({ username, passwd }, db) {
   if (!!token) {
     const result = await getTokenTable(db).insert(createTokenDBModel(token, user.username))
     user.token = token
-    console.log('>>>login add token: ' + JSON.stringify(result))
+    console.log('>>>login add token: ' + !!result)
     return createResponse(user, Tips[Code.SUCCESS])
   }
   return Tips[Code.LOGIN_ERR]
@@ -89,7 +94,7 @@ async function logout(token, db) {
   const user = await findUserByToken(db, token)
   if (!user) return Tips[Code.TOKEN_ERR]
   const result = await getTokenTable(db).remove({ token })
-  console.log('>>>logout remove token: ' + result)
+  console.log('>>>logout remove token: ' + !!result)
   return Tips[Code.SUCCESS]
 }
 module.exports = {

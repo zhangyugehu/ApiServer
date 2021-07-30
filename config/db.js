@@ -6,6 +6,7 @@ const DB_NAME = 'test'
 const CONNECTION_URL = `mongodb://10.242.60.82:27017/${DB_NAME}`
 
 const DBTables = {
+    NOTIFICATION: 't_notification',
     NOTE: 'notes',
     ACCOUNTING: 't_accounting',
     TOKEN: 't_token',
