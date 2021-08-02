@@ -3,7 +3,8 @@
 const { DBTables } = require('../../config/db')
 const TokenHelper = require('../util/token')
 const { Tips, Code, createMessage } = require('../model/response')
-const { Notification, createNotification } = require('../model/notification')
+const { Notification, createNotification, createNotificationFilter } = require('../model/notification');
+const e = require('express');
 
 const LIMIT_DEFAULT = 10;
 
@@ -28,7 +29,6 @@ module.exports = function(app, db) {
   }))
   
   app.post(PATH, async (req, res) => await TokenHelper.validateToken(db, req, res, async (user) => {
-    req.body.timestamp = new Date().getTime()
     const { username } = user
     if (!username) {
       res.send(Tips[Code.USER_INVALIDATE])
@@ -40,7 +40,15 @@ module.exports = function(app, db) {
       return
     }
     console.log(`token ${!!req.headers.token} | username ${username}`)
-    db.collection(DBTables.NOTIFICATION).insert(notificationOrError, (err, rst) => res.send(Tips[Code.SUCCESS]))
+    const cursor = db.collection(DBTables.NOTIFICATION)
+      .find(createNotificationFilter(notificationOrError))
+      const exists = await cursor.hasNext()
+      if (exists) {
+        // 去重
+        res.send(Tips[Code.RECORD_EXISTS])
+      } else {
+        db.collection(DBTables.NOTIFICATION).insert(notificationOrError, (err, rst) => res.send(Tips[Code.SUCCESS]))
+      }
   }))
 
   app.get(`${PATH}/simple`, async (req, res) => await TokenHelper.validateToken(db, req, res, async (user) => {

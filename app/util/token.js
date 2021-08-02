@@ -4,9 +4,13 @@ const jwt = require('jsonwebtoken')
 const { DBTables } = require('../../config/db')
 const { Tips, Code } = require('../model/response')
 
+const MINTUES = 60
+const HOUR = 60 * MINTUES
+const DAY = HOUR * 24
+
 const ALGORITHM = 'RS256'
 // 过期时间30天
-const EXP = 60 * 60 * 24// * 30
+const EXP = DAY * 30
 
 const GUEST = {
   'username': 'guest'
@@ -60,8 +64,8 @@ async function _findUser(db, params) {
   return user
 }
 async function clearTokenByUserName(db, username) {
-  const result = await getTokenTable(db).remove({ username })
-  console.log('>>>clearToken result: ')
+  const {result} = await getTokenTable(db).remove({ username })
+  console.log('>>>clearToken result: ', result)
 }
 async function findUserByToken(db, token) {
   const cursor = getTokenTable(db).find({ token })
@@ -79,15 +83,24 @@ async function findUserByToken(db, token) {
   return user
 }
 
-function isTokenAvailable(db, token) {
-  return verifyToken(token) && findUserByToken(db, token)
+function validateTokenAndGetUser(db, token) {
+  if (verifyToken(token)) {
+    return findUserByToken(db, token)
+  }
+  getTokenTable(db).remove({ token }).then(_ => console.log('validateTokenAndGetUser and delete incalidate token'))
+  return false;
 }
 
 async function validateToken(db, req, res, callback) {
-  const user = await isTokenAvailable(db, req.headers.token)
+  const token = req.headers.token
+  const user = await validateTokenAndGetUser(db, token)
   if (user) {
     callback(user)
+  } else if (token) {
+    // 登录用户，token失效
+    res.send(Tips[Code.TOKEN_ERR])
   } else {
+    // guest
     callback(GUEST)
   }
 }
@@ -95,5 +108,5 @@ async function validateToken(db, req, res, callback) {
 module.exports = {
   createToken, verifyToken,
   createTokenDBModel, clearTokenByUserName, getTokenTable,
-  findUserByToken, isTokenAvailable, validateToken
+  findUserByToken, isTokenAvailable: validateTokenAndGetUser, validateToken
 }

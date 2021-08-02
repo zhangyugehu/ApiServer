@@ -11,7 +11,9 @@ function createNotification(body, username) {
     return 'body null'
   }
   const { title, message, timestamp, phone } = body
-  if (!title) {
+  if (!timestamp) {
+    return 'timestamp null'
+  } else if (!title) {
     return 'title null'
   } else if (!message) {
     return 'message null'
@@ -20,6 +22,10 @@ function createNotification(body, username) {
   }
 }
 
+function createNotificationFilter(notification) {
+  return { timestamp: notification.timestamp }
+}
+
 module.exports = {
-  Notification, createNotification
+  Notification, createNotification, createNotificationFilter
 }

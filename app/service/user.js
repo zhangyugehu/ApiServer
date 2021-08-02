@@ -68,7 +68,7 @@ async function login({ username, passwd }, db) {
   }
   delete user.passwd
   // 重新登陆删除之前token
-  await clearTokenByUserName(db, user.username);
+  // await clearTokenByUserName(db, user.username);
   const token = createToken(username)
   if (!!token) {
     const result = await getTokenTable(db).insert(createTokenDBModel(token, user.username))

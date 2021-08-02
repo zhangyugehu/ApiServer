@@ -22,16 +22,21 @@ MongoClient.connect(db.url, function(err, client) {
     return;
   }
   const database = client.db("test")
-  require('./app/routes')(app, database, client);
+  require('./app/routes')(app, database);
   app.listen(PORT_HTTP, () => {
     console.log('http listen on ' + PORT_HTTP);
   });      
   
-  // const key = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.key'), 'utf-8');
-  // const cert = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.pem'), 'utf-8');
-  // const certs = {key, cert};
-  // const httpsServer = https.createServer(certs, app);
-  // httpsServer.listen(PORT_HTTPS, function() {
-  //   console.log('https listen on ' + PORT_HTTPS);
-  // });
+  try {
+    const key = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.key'), 'utf-8');
+    const cert = fs.readFileSync(path.join(__dirname, './cer/home.thssh.top.pem'), 'utf-8');
+    const certs = {key, cert};
+    const httpsServer = https.createServer(certs, app);
+    httpsServer.listen(PORT_HTTPS, function() {
+      console.log('https listen on ' + PORT_HTTPS);
+    });
+  } catch(e) {
+    console.log(`start https error. ${e && e.message}`);
+    console.log(`start https error. ${e && e.message}`);
+  }
 });
