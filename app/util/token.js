@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const jwt = require('jsonwebtoken')
 const { DBTables } = require('../../config/db')
+const { Tips, Code } = require('../model/response')
 
 const ALGORITHM = 'RS256'
 // 过期时间30天

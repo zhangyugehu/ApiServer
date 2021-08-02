@@ -9,11 +9,6 @@ const LIMIT_DEFAULT = 10;
 module.exports = function(app, db) {
   
     app.post('/notes', async (req, res) => {
-      // const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
-      // if (!success) {
-      //   res.send(Tips[Code.TOKEN_ERR])
-      //   return
-      // }
       req.body.timestamp = new Date().getTime();
       console.log('body====>', req.body)
       db.collection(DBTables.NOTE)
@@ -23,11 +18,6 @@ module.exports = function(app, db) {
     })
 
     app.get('/notes', async (req, res) => {
-      const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
-      if (!success) {
-        res.send(Tips[Code.TOKEN_ERR])
-        return
-      }
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection(DBTables.NOTE).find().sort({ timestamp: -1 }).limit(limit)
       const list = [];
@@ -39,11 +29,6 @@ module.exports = function(app, db) {
     })
 
     app.get('/notes/simple', async (req, res) => {
-      const success = await TokenHelper.isTokenAvailable(db, req.headers.token)
-      if (!success) {
-        res.send(Tips[Code.TOKEN_ERR])
-        return
-      }
       const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
       const cursor = db.collection(DBTables.NOTE).find().sort({ timestamp: -1 }).limit(limit)
       // const list = [];
@@ -76,12 +61,5 @@ module.exports = function(app, db) {
       }
       db.collection(DBTables.NOTE).remove({})
       res.send(Tips[Code.SUCCESS])
-      // if (req.body.pwd === 'hth123456') {
-      //   db.collection(DBTables.NOTE).remove({})
-      //   res.send(JSON.stringify({message: 'success'}))
-      // } else {
-      //   console.log(req.body)
-      //   res.send(JSON.stringify({message: 'pwd error.'}))
-      // }
     })
 };
