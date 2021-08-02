@@ -43,9 +43,14 @@ module.exports = function(app, db) {
     db.collection(DBTables.NOTIFICATION).insert(notificationOrError, (err, rst) => res.send(Tips[Code.SUCCESS]))
   }))
 
-  app.get(`${PATH}/simple`, async (req, res) => {
+  app.get(`${PATH}/simple`, async (req, res) => await TokenHelper.validateToken(db, req, res, async (user) => {
+    const { username } = user
+    if (!username) {
+      res.send(Tips[Code.USER_INVALIDATE])
+      return
+    }
     const limit = parseInt(req.query.limit || LIMIT_DEFAULT);
-    const cursor = db.collection(DBTables.NOTIFICATION).find().sort({ timestamp: -1 }).limit(limit)
+    const cursor = db.collection(DBTables.NOTIFICATION).find({ username }).sort({ timestamp: -1 }).limit(limit)
     // const list = [];
     let html = '<!DOCTYPE html>'
     html += '<html xmlns="http://www.w3.org/1999/xhtml">'
@@ -66,7 +71,7 @@ module.exports = function(app, db) {
     html += '</html>'
     res.send(html)
     // res.send(list)
-  })
+  }))
 
   app.delete(PATH, async (req, res) => await TokenHelper.validateToken(db, req, res, async () => {
     db.collection(DBTables.NOTIFICATION).remove({})

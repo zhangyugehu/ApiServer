@@ -8,6 +8,10 @@ const ALGORITHM = 'RS256'
 // 过期时间30天
 const EXP = 60 * 60 * 24// * 30
 
+const GUEST = {
+  'username': 'guest'
+}
+
 function createToken(uid) {
   try {
     let created = Math.floor(Date.now() / 1000)
@@ -84,7 +88,7 @@ async function validateToken(db, req, res, callback) {
   if (user) {
     callback(user)
   } else {
-    res.send(Tips[Code.TOKEN_ERR])
+    callback(GUEST)
   }
 }
 
