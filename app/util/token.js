@@ -87,12 +87,16 @@ function validateTokenAndGetUser(db, token) {
   if (verifyToken(token)) {
     return findUserByToken(db, token)
   }
-  getTokenTable(db).remove({ token }).then(_ => console.log('validateTokenAndGetUser and delete incalidate token'))
+  if (token) {
+    getTokenTable(db).remove({ token })
+      .then(_ => console.log(`delete invalidate token[${token.substring(0, 5)}...]`))
+  }
   return false;
 }
 
 async function validateToken(db, req, res, callback) {
   const token = req.headers.token
+  console.log(req.headers)
   const user = await validateTokenAndGetUser(db, token)
   if (user) {
     callback(user)

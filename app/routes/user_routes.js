@@ -1,4 +1,3 @@
-const TokenHelper = require('../util/token')
 const UserService = require('../service/user')
 
 module.exports = function(app, db) {

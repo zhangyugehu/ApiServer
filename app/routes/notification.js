@@ -4,7 +4,6 @@ const { DBTables } = require('../../config/db')
 const TokenHelper = require('../util/token')
 const { Tips, Code, createMessage } = require('../model/response')
 const { Notification, createNotification, createNotificationFilter } = require('../model/notification');
-const e = require('express');
 
 const LIMIT_DEFAULT = 10;
 
@@ -25,7 +24,7 @@ module.exports = function(app, db) {
       const item = await cursor.next();
       list.push(item);
     }
-    res.send(list)
+    res.send(Tips.success(list))
   }))
   
   app.post(PATH, async (req, res) => await TokenHelper.validateToken(db, req, res, async (user) => {

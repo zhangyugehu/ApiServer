@@ -8,6 +8,7 @@ const app            = express();
 const https          = require('https');
 const fs             = require('fs');
 const path           = require('path');
+const cors           = require('express-cors')
 
 const PORT_HTTP = 8000;
 const PORT_HTTPS = 3000;
@@ -15,6 +16,12 @@ const PORT_HTTPS = 3000;
 DateUtil.injectExt()
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors({
+  allowedOrigins: ['localhost:3000'],
+}))
+// let static middleware do its job
+app.use(express.static(__dirname + '/public'));
 
 MongoClient.connect(db.url, function(err, client) {
   if (err) {
@@ -36,7 +43,6 @@ MongoClient.connect(db.url, function(err, client) {
       console.log('https listen on ' + PORT_HTTPS);
     });
   } catch(e) {
-    console.log(`start https error. ${e && e.message}`);
     console.log(`start https error. ${e && e.message}`);
   }
 });
