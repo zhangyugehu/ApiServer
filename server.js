@@ -23,7 +23,11 @@ app.use(cors({
 // let static middleware do its job
 app.use(express.static(__dirname + '/public'));
 
-MongoClient.connect(db.url, function(err, client) {
+const OPTIONS = {
+  autoReconnect: true,
+  poolSize: 10
+}
+MongoClient.connect(db.url, OPTIONS, function(err, client) {
   if (err) {
     console.log(err);
     return;
